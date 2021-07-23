@@ -2,4 +2,8 @@
   text-align: center;
 }
 
-
+.Image {
+  position:relative;
+  display: inline-block;
+  padding:20px;
+}
