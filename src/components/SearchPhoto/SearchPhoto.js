@@ -12,7 +12,7 @@ const SearchPhoto = ({ search }) => {
 
   const urlParams = {
     api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
-    extras: 'url_n,url_m,url_c,url_l,url_h,url_o',
+    extras: 'url_n,url_m,url_c,url_l,url_h,url_o,url_t,url_s,url_q',
     format: 'json',
     nojsoncallback: '1',
   }
@@ -36,7 +36,6 @@ const SearchPhoto = ({ search }) => {
       text: `${search}`,
       extras: 'url_n,url_m,url_c,url_l,url_h,url_o',
       format: 'json',
-      per_page: '10',
       nojsoncallback: '1',
     }
 
@@ -47,7 +46,7 @@ const SearchPhoto = ({ search }) => {
     }, url)
 
     console.log('url value is ', url)
-    if(search) {
+    if (search) {
       console.log('search has some value')
       axios.get(url).then((response) => {
         setSearchValue(response.data.photos.photo)
@@ -65,7 +64,6 @@ const SearchPhoto = ({ search }) => {
       extras: 'url_n,url_m,url_c,url_l,url_h,url_o',
       format: 'json',
       page: `${page + 1}`,
-      per_page: '10',      
       nojsoncallback: '1',
     }
 
@@ -101,7 +99,9 @@ const SearchPhoto = ({ search }) => {
         >
           {searchvalue.map((src) => (
             <img
-              src={src.url_n}
+              src={
+                src.url_n || src.url_s || src.url_q || src.url_t || src.url_o
+              }
               alt={src.title}
               key={src.id}
               className="Image"
@@ -118,7 +118,7 @@ const SearchPhoto = ({ search }) => {
       </div>
       {flicks.map((flick) => (
         <img
-          src={flick.url_n}
+          src={flick.url_n || flick.url_s || flick.url_q || flick.url_t || flick.url_o}
           alt={flick.title}
           key={flick.id}
           className="Image"
