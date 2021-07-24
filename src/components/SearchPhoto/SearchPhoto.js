@@ -2,9 +2,8 @@ import './SearchPhoto.css'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 
-const SearchPhoto = () => {
+const SearchPhoto = ({ search }) => {
   const [flicks, setFlicks] = useState([])
-  const [search, setSearch] = useState('')
 
   const urlParams = {
     api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
@@ -24,26 +23,9 @@ const SearchPhoto = () => {
     })
   }, [url])
 
-  const handleCLick = (e) => {
-    // console.log('search bar clicked!', e)
-  }
-
-  const handleSearchChange = (event) => {
-    setSearch(event.target.value)
-  }
-
   const hideWhenFlicksLoaded = { display: flicks === [] ? '' : 'none' }
   return (
     <>
-      <div className="Src">
-        <h3 id="word">Search Photos</h3>
-        <input
-          placeholder="keyword here"
-          value={search}
-          onClick={handleCLick}
-          onChange={handleSearchChange}
-        />
-      </div>
       <div style={hideWhenFlicksLoaded}>
         <h4>Loading...</h4>
       </div>
