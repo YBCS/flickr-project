@@ -1,90 +1,46 @@
 import './SearchPhoto.css'
-import axios from 'axios'
+import flickrService from '../../services/flickrService'
 import ImageModal from '../ImgModal/ImageModal'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import React, { useState, useEffect } from 'react'
 
 const SearchPhoto = ({ search }) => {
   const [flicks, setFlicks] = useState([])
-  const [searchvalue, setSearchValue] = useState([])
-  const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const [total, setTotal] = useState(0)
-  const [modalShow, setModalShow] = useState(false)
   const [modalPic, setModalPic] = useState([])
-
-
-  const urlParams = {
-    api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
-    extras: 'url_n,url_m,url_c,url_l,url_h,url_o,url_t,url_s,url_q',
-    format: 'json',
-    nojsoncallback: '1',
-  }
-
-  let url =
-    'https://www.flickr.com/services/rest/?method=flickr.photos.getRecent'
-  url = Object.keys(urlParams).reduce((acc, item) => {
-    return acc + '&' + item + '=' + urlParams[item]
-  }, url)
+  const [modalShow, setModalShow] = useState(false)
+  const [page, setPage] = useState(0)
+  const [searchvalue, setSearchValue] = useState([])
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
-    axios.get(url).then((response) => {
-      setFlicks(response.data.photos.photo)
-    })
-  }, [url])
+    flickrService.getRecent().then((response) => {
+      setFlicks(response)
+    }).catch(e => console.error('error query get Recent api',e))
+  }, [])
 
   useEffect(() => {
-    const urlParams = {
-      api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
-      text: `${search}`,
-      extras: 'url_n,url_m,url_c,url_l,url_h,url_o',
-      format: 'json',
-      nojsoncallback: '1',
-    }
-
-    let url =
-      'https://www.flickr.com/services/rest/?method=flickr.photos.search'
-    url = Object.keys(urlParams).reduce((acc, item) => {
-      return acc + '&' + item + '=' + urlParams[item]
-    }, url)
-
     if (search) {
-      console.log('search has some value')
-      axios.get(url).then((response) => {
-        setSearchValue(response.data.photos.photo)
-        setTotal(response.data.photos.total)
-        setPage(response.data.photos.page)
-      })
+      flickrService.getSearch(search).then((response) => {
+        setSearchValue(response.photo)
+        setTotal(response.total)
+        setPage(response.page)
+      }).catch(e => console.error('error query Search api',e))
     }
   }, [search])
 
   const fetchSearch = () => {
     // fetch new search results, as search value change
 
-    const urlParams = {
-      api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
-      text: `${search}`,
-      extras: 'url_n,url_m,url_c,url_l,url_h,url_o',
-      format: 'json',
-      page: `${page + 1}`,
-      nojsoncallback: '1',
-    }
-
-    let url =
-      'https://www.flickr.com/services/rest/?method=flickr.photos.search'
-    url = Object.keys(urlParams).reduce((acc, item) => {
-      return acc + '&' + item + '=' + urlParams[item]
-    }, url)
-
     if (searchvalue.length >= total) {
       // is this in the right place
       setHasMore(false)
     }
     setTimeout(() => {
-      axios.get(url).then((response) => {
-        setSearchValue(searchvalue.concat(response.data.photos.photo))
-        setPage(response.data.photos.page)
-      })
+      flickrService.loadSearch(search, page).then((response) => {
+        setSearchValue(searchvalue.concat(response.photo))
+        setPage(response.page)
+      }).catch(e => console.error('error query Search api fetch',e))
     }, 1500)
   }
 
@@ -94,11 +50,12 @@ const SearchPhoto = ({ search }) => {
   }
 
   const imgUrlOptions = (pic) => {
-    const final_url = pic.url_n || pic.url_s || pic.url_q || pic.url_t || pic.url_o
+    const final_url =
+      pic.url_n || pic.url_s || pic.url_q || pic.url_t || pic.url_o
     return final_url
-  } 
+  }
 
-  const hideWhenFlicksLoaded = { display: flicks === [] ? '' : 'none' }
+  const hideWhenFlicksLoaded = { display: flicks.length === 0 ? '' : 'none' }
 
   if (search !== '') {
     return (

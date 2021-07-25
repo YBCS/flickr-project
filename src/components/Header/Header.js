@@ -4,7 +4,6 @@ import SearchPhoto from '../SearchPhoto/SearchPhoto'
 const Header = ({ text }) => {
   const [search, setSearch] = useState('')
   const handleCLick = (e) => {
-    // console.log('search bar clicked!', e)
   }
   const handleSearchChange = (event) => {
     setSearch(event.target.value)
