@@ -3,7 +3,7 @@
 /* 
     localStorage:
     {
-        suggestions: "wrd1,wrd2,..."
+        suggestions: "word1,word2,..."
     }
 */
 
@@ -31,5 +31,8 @@ const getStorage = () => {
   }
 }
 
+const clearStorage = () => localStorage.clear()
+
+ 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { setStorage, getStorage }
+export default { setStorage, getStorage, clearStorage }
