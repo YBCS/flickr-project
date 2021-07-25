@@ -1,5 +1,6 @@
 import './SearchPhoto.css'
 import axios from 'axios'
+import ImageModal from '../ImgModal/ImageModal'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import React, { useState, useEffect } from 'react'
 
@@ -9,6 +10,9 @@ const SearchPhoto = ({ search }) => {
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [total, setTotal] = useState(0)
+  const [modalShow, setModalShow] = useState(false)
+  const [modalPic, setModalPic] = useState([])
+
 
   const urlParams = {
     api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
@@ -32,7 +36,6 @@ const SearchPhoto = ({ search }) => {
   useEffect(() => {
     const urlParams = {
       api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
-      // text: search === '' ? 'cat' : `${search}`,
       text: `${search}`,
       extras: 'url_n,url_m,url_c,url_l,url_h,url_o',
       format: 'json',
@@ -45,7 +48,6 @@ const SearchPhoto = ({ search }) => {
       return acc + '&' + item + '=' + urlParams[item]
     }, url)
 
-    console.log('url value is ', url)
     if (search) {
       console.log('search has some value')
       axios.get(url).then((response) => {
@@ -57,7 +59,8 @@ const SearchPhoto = ({ search }) => {
   }, [search])
 
   const fetchSearch = () => {
-    console.log('called fetch ')
+    // fetch new search results, as search value change
+
     const urlParams = {
       api_key: 'a10d89eaa8a7d185645ffb45cb6a91a6',
       text: `${search}`,
@@ -85,6 +88,16 @@ const SearchPhoto = ({ search }) => {
     }, 1500)
   }
 
+  const handleModal = (pic) => {
+    setModalPic(pic)
+    setModalShow(true)
+  }
+
+  const imgUrlOptions = (pic) => {
+    const final_url = pic.url_n || pic.url_s || pic.url_q || pic.url_t || pic.url_o
+    return final_url
+  } 
+
   const hideWhenFlicksLoaded = { display: flicks === [] ? '' : 'none' }
 
   if (search !== '') {
@@ -99,15 +112,19 @@ const SearchPhoto = ({ search }) => {
         >
           {searchvalue.map((src) => (
             <img
-              src={
-                src.url_n || src.url_s || src.url_q || src.url_t || src.url_o
-              }
+              src={imgUrlOptions(src)}
               alt={src.title}
               key={src.id}
               className="Image"
+              onClick={() => handleModal(src)}
             />
           ))}
         </InfiniteScroll>
+        <ImageModal
+          pic={modalPic}
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
       </>
     )
   }
@@ -118,12 +135,18 @@ const SearchPhoto = ({ search }) => {
       </div>
       {flicks.map((flick) => (
         <img
-          src={flick.url_n || flick.url_s || flick.url_q || flick.url_t || flick.url_o}
+          src={imgUrlOptions(flick)}
           alt={flick.title}
           key={flick.id}
           className="Image"
+          onClick={() => handleModal(flick)}
         />
       ))}
+      <ImageModal
+        pic={modalPic}
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
     </>
   )
 }
