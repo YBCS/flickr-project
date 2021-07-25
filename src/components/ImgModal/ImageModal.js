@@ -22,7 +22,7 @@ const ImageModal = (props) => {
         <img
           src={src.url_l || src.url_c || src.url_m || src.url_n}
           alt={src.title}
-          className="ModalImage"
+          className="container"
         />
       </Modal.Body>
       <Modal.Footer>

@@ -50,6 +50,10 @@ const SearchPhoto = ({ search }) => {
   }
 
   const imgUrlOptions = (pic) => {
+    /* 
+      image size options provided by api.
+      Choose smaller size for less network overhead
+    */
     const final_url =
       pic.url_n || pic.url_s || pic.url_q || pic.url_t || pic.url_o
     return final_url
