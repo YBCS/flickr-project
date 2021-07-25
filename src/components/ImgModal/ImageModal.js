@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 
 const ImageModal = (props) => {
-  console.log('props in image modal is ', props)
   const src = props.pic
   return (
     <Modal

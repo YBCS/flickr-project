@@ -3,6 +3,7 @@ import flickrService from '../../services/flickrService'
 import ImageModal from '../ImgModal/ImageModal'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import React, { useState, useEffect } from 'react'
+import storageService from '../../services/storageService'
 
 const SearchPhoto = ({ search }) => {
   const [flicks, setFlicks] = useState([])
@@ -21,11 +22,14 @@ const SearchPhoto = ({ search }) => {
 
   useEffect(() => {
     if (search) {
-      flickrService.getSearch(search).then((response) => {
-        setSearchValue(response.photo)
-        setTotal(response.total)
-        setPage(response.page)
-      }).catch(e => console.error('error query Search api',e))
+      setTimeout(() => {
+        flickrService.getSearch(search).then((response) => {
+          console.log('throttled res ', response)
+          setSearchValue(response.photo)
+          setTotal(response.total)
+          setPage(response.page)
+        }).catch(e => console.error('error query Search api',e))
+      }, 300)
     }
   }, [search])
 
@@ -41,6 +45,8 @@ const SearchPhoto = ({ search }) => {
         setSearchValue(searchvalue.concat(response.photo))
         setPage(response.page)
       }).catch(e => console.error('error query Search api fetch',e))
+      // stored only when fetch is queried
+      storageService.setStorage(search)
     }, 1500)
   }
 
