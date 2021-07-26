@@ -31,7 +31,7 @@ const Header = ({ text }) => {
     setsuggestions(undefined)
   }
 
-  const someStyle = {
+  const style = {
     width: 400,
   }
 
@@ -41,7 +41,7 @@ const Header = ({ text }) => {
         <h1>{text}</h1>
         <div className="Src">
           <h3 id="word">Search Photos</h3>
-          <InputGroup className="mx-auto" style={someStyle}>
+          <InputGroup className="mx-auto" style={style}>
             <FormControl
               placeholder="Search Keyword~"
               aria-label="Search Keyword~"
@@ -62,7 +62,8 @@ const Header = ({ text }) => {
                 ))}
                 <Dropdown.Item>
                   <Button
-                    variant="outline-secondary"
+                    variant="outline-danger"
+                    size="sm"
                     onClick={handleSuggestionClear}
                   >
                     clear
@@ -81,7 +82,7 @@ const Header = ({ text }) => {
         <h1>{text}</h1>
         <div className="Src">
           <h3 id="word">Search Photos</h3>
-          <InputGroup className="mx-auto" style={someStyle}>
+          <InputGroup className="mx-auto" style={style}>
             <FormControl
               placeholder="Search Keyword~"
               aria-label="Search Keyword~"
