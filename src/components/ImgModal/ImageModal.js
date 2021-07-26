@@ -13,11 +13,10 @@ const ImageModal = (props) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
+          <h4>{props.pic.title ? props.pic.title : 'Modal Title'}</h4>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>{props.pic.title ? props.pic.title : 'Title'}</h4>
         <img
           src={src.url_l || src.url_c || src.url_m || src.url_n}
           alt={src.title}

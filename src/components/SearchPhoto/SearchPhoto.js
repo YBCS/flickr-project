@@ -6,29 +6,37 @@ import React, { useState, useEffect } from 'react'
 import storageService from '../../services/storageService'
 
 const SearchPhoto = ({ search }) => {
-  const [flicks, setFlicks] = useState([])
-  const [hasMore, setHasMore] = useState(true)
-  const [modalPic, setModalPic] = useState([])
-  const [modalShow, setModalShow] = useState(false)
-  const [page, setPage] = useState(0)
-  const [searchvalue, setSearchValue] = useState([])
-  const [total, setTotal] = useState(0)
+  // add some documentation
+  const [flicks, setFlicks] = useState([]) /* flicker image data */
+  const [hasMore, setHasMore] = useState(true) /* is there more data */
+  const [modalPic, setModalPic] = useState([]) /* the pic for modal */
+  const [modalShow, setModalShow] = useState(false) /* bool to show/hide modal*/
+  const [page, setPage] = useState(0) /* page number of request */
+  const [searchvalue, setSearchValue] = useState(
+    []
+  ) /* current value in search */
+  const [total, setTotal] = useState(0) /* total number of pic */
 
   useEffect(() => {
-    flickrService.getRecent().then((response) => {
-      setFlicks(response)
-    }).catch(e => console.error('error query get Recent api',e))
+    flickrService
+      .getRecent()
+      .then((response) => {
+        setFlicks(response)
+      })
+      .catch((e) => console.error('error query get Recent api', e))
   }, [])
 
   useEffect(() => {
     if (search) {
       setTimeout(() => {
-        flickrService.getSearch(search).then((response) => {
-          console.log('throttled res ', response)
-          setSearchValue(response.photo)
-          setTotal(response.total)
-          setPage(response.page)
-        }).catch(e => console.error('error query Search api',e))
+        flickrService
+          .getSearch(search)
+          .then((response) => {
+            setSearchValue(response.photo)
+            setTotal(response.total)
+            setPage(response.page)
+          })
+          .catch((e) => console.error('error query Search api', e))
       }, 300)
     }
   }, [search])
@@ -41,10 +49,14 @@ const SearchPhoto = ({ search }) => {
       setHasMore(false)
     }
     setTimeout(() => {
-      flickrService.loadSearch(search, page).then((response) => {
-        setSearchValue(searchvalue.concat(response.photo))
-        setPage(response.page)
-      }).catch(e => console.error('error query Search api fetch',e))
+      flickrService
+        .loadSearch(search, page)
+        .then((response) => {
+          setSearchValue(searchvalue.concat(response.photo))
+          setPage(response.page)
+          setTotal(response.total)
+        })
+        .catch((e) => console.error('error query Search api fetch', e))
       // stored only when fetch is queried
       storageService.setStorage(search)
     }, 1500)
@@ -67,10 +79,11 @@ const SearchPhoto = ({ search }) => {
 
   const hideWhenFlicksLoaded = { display: flicks.length === 0 ? '' : 'none' }
 
-  if (search !== '') {
+  console.log('total right now is ', total)
+  console.log('search right now is ', search)
+  if (search !== '' && total !== 0) {
     return (
       <>
-        <p> {search} </p>
         <InfiniteScroll
           dataLength={searchvalue.length}
           next={fetchSearch}
@@ -94,28 +107,32 @@ const SearchPhoto = ({ search }) => {
         />
       </>
     )
-  }
-  return (
-    <>
-      <div style={hideWhenFlicksLoaded}>
-        <h4>Loading...</h4>
-      </div>
-      {flicks.map((flick) => (
-        <img
-          src={imgUrlOptions(flick)}
-          alt={flick.title}
-          key={flick.id}
-          className="Image"
-          onClick={() => handleModal(flick)}
+  } else if (search !== '' && total === 0) {
+    console.log('render condition')
+    return <h1>There are NO More Results!</h1>
+  } else {
+    return (
+      <>
+        <div style={hideWhenFlicksLoaded}>
+          <h4>Loading...</h4>
+        </div>
+        {flicks.map((flick) => (
+          <img
+            src={imgUrlOptions(flick)}
+            alt={flick.title}
+            key={flick.id}
+            className="Image"
+            onClick={() => handleModal(flick)}
+          />
+        ))}
+        <ImageModal
+          pic={modalPic}
+          show={modalShow}
+          onHide={() => setModalShow(false)}
         />
-      ))}
-      <ImageModal
-        pic={modalPic}
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
-    </>
-  )
+      </>
+    )
+  }
 }
 
 export default SearchPhoto

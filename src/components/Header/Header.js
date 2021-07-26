@@ -10,11 +10,10 @@ import SearchPhoto from '../SearchPhoto/SearchPhoto'
 import storageService from '../../services/storageService'
 
 const Header = ({ text }) => {
-  const [search, setSearch] = useState('')
-  const [suggestions, setsuggestions] = useState([])
+  const [search, setSearch] = useState('')            /* current search value */
+  const [suggestions, setsuggestions] = useState([])  /* list of suggestions */
 
   useEffect(() => {
-    console.log('fetching from localStorage')
     setsuggestions(storageService.getStorage())
   }, [search])
 
@@ -23,12 +22,10 @@ const Header = ({ text }) => {
   }
 
   const handleSuggestion = (sug) => {
-    console.log('suggest handle!', sug)
     setSearch(sug)
   }
 
   const handleSuggestionClear = () => {
-    console.log('suggest cleared')
     storageService.clearStorage()
     setsuggestions(undefined)
   }
@@ -37,7 +34,6 @@ const Header = ({ text }) => {
     width: 400,
   }
 
-  console.log('sugs are ', suggestions)
   if (suggestions) {
     return (
       <>
