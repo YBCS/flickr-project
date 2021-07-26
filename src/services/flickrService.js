@@ -21,7 +21,7 @@ const getRecent = () => {
     query the recents api
     check below for more
     https://www.flickr.com/services/api/flickr.photos.getRecent.html  
-  */  
+  */
   let url = `${baseUrl}.getRecent`
   url = processUrl(url, baseUrlParams)
 

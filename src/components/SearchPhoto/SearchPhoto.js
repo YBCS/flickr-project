@@ -27,7 +27,7 @@ const SearchPhoto = ({ search }) => {
   }, [])
 
   useEffect(() => {
-    if (search) {
+    if (search.trim() !== '') {
       setTimeout(() => {
         flickrService
           .getSearch(search)
