@@ -1,3 +1,25 @@
+# Project Features
+    - at Start
+    - Shows 100 recent photos uploaded to flickr
+
+    - at Photo
+    - Photo can be clicked to be displayed in modal and enlarged
+
+    - at Search
+    - Shows search results from flickr search api
+    - Infinite loader as long as there are results
+
+    - at Suggestions
+    - Suggestions are saved when Infinite Loader is triggered
+    - Suggestions can be cleared
+
+    - at Header
+    - Sticky search Header
+
+# Open Source Library used
+    - react-bootstrap
+    - react-infinite-scroll-component
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
