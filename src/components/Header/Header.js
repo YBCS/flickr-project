@@ -5,13 +5,14 @@ import {
   FormControl,
   InputGroup,
 } from 'react-bootstrap'
+import './Header.css'
 import React, { useState, useEffect } from 'react'
 import SearchPhoto from '../SearchPhoto/SearchPhoto'
 import storageService from '../../services/storageService'
 
 const Header = ({ text }) => {
-  const [search, setSearch] = useState('')            /* current search value */
-  const [suggestions, setsuggestions] = useState([])  /* list of suggestions */
+  const [search, setSearch] = useState('') /* current search value */
+  const [suggestions, setsuggestions] = useState([]) /* list of suggestions */
 
   useEffect(() => {
     setsuggestions(storageService.getStorage())
