@@ -79,8 +79,6 @@ const SearchPhoto = ({ search }) => {
 
   const hideWhenFlicksLoaded = { display: flicks.length === 0 ? '' : 'none' }
 
-  console.log('total right now is ', total)
-  console.log('search right now is ', search)
   if (search !== '' && total !== 0) {
     return (
       <>
@@ -108,7 +106,6 @@ const SearchPhoto = ({ search }) => {
       </>
     )
   } else if (search !== '' && total === 0) {
-    console.log('render condition')
     return <h1>There are NO More Results!</h1>
   } else {
     return (
